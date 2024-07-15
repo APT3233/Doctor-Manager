@@ -15,8 +15,8 @@
             <Button text="Search" fx:id="btnSearch" onAction="#handleSearch" styleClass="btn-main" />
             <Button text="Update" fx:id="btnUpdate" onAction="#handleUpdate" styleClass="btn-main" />
             <Button text="Delete" fx:id="btnDelete" onAction="#handleDelete" styleClass="btn-main" />
-            <Button text="Sort" fx:id="btnSort"  styleClass="btn-main" />
-            <Button text="Show" fx:id="btnShow"  styleClass="btn-main" />
+            <!-- <Button text="Sort" fx:id="btnSort"  styleClass="btn-main" /> -->
+            <Button text="Show" fx:id="btnShow" onAction="#handleShow" styleClass="btn-main" />
             <Button text="Feedback" fx:id="btnFB" onAction="#handleFeedback" styleClass="btn-main"/>
         </VBox>
     </left>

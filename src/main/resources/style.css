@@ -38,12 +38,29 @@
   -fx-padding: 50px 100px 50px 100px;
   -fx-alignment: CENTER;
 }
-.title-add, .title-fb, .title-sear, .title-upd , .title-del{
+#vBox-ser, #vBox-show{
+  -fx-padding: 50px 0px 50px 0px;
+  -fx-alignment: TOP_CENTER;
+}
+
+
+
+/* vBox Table */
+#vBox-table{
+  -fx-padding: 280px 50px 100px 50px;
+}
+#vBox-table-show{
+  -fx-padding: 150px 20px 20px 20px;
+}
+
+.title-add, .title-fb, .title-ser, .title-upd , .title-del, .title-show{
   -fx-font-size: 42;
   -fx-padding: 0px 0px 23px 0;
   -fx-font-weight: 900;
   -fx-text-fill: linear-gradient(to right, #6A82FB, #FC5C7D);
 }
+
+
 .label-add {
   -fx-padding: 10px 0px 0px 0;
   -fx-font-size: 16;
@@ -52,8 +69,9 @@
   -fx-pref-width: 150;
 }
 
+
 /* Button submit featurs */
-.add-btn, .fb-btn, .upd-btn, .del-btn{
+.add-btn, .fb-btn, .upd-btn, .del-btn, .ser-btn{
   -fx-padding: 10px 20px;
   -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #FFA07A 0%, #FF9900 100%);
   -fx-background-radius: 20;
@@ -64,9 +82,7 @@
 
 
 /* Search featuer */
-#vBox-sear{
-  -fx-padding: 30px 20px;
-}
+
 .title-sear{
   -fx-padding: 40px 170px 50px 80px;
 }

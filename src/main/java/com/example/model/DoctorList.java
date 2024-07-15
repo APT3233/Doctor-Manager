@@ -5,10 +5,8 @@ import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.OutputStream;
-import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.nio.Buffer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -17,7 +15,6 @@ import java.util.Comparator;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import javax.print.Doc;
 
 
 
@@ -27,6 +24,7 @@ public class DoctorList {
 
     public DoctorList(){
         this.DoctorList = new ArrayList<>();
+        readFromFile("inputData.txt");
     }
     
 
@@ -38,7 +36,7 @@ public class DoctorList {
     }
 
     public boolean addNew(Doctor newD) {
-        if (DoctorList.contains(newD) || newD.getAvai() < 0 || 
+        if (DoctorList.contains(newD) || newD.getAvai().isEmpty()  || 
             newD.getCode().isEmpty() || newD.getName().isEmpty() || 
             newD.getSpecialty().isEmpty() || newD.getEmail().isEmpty()) 
             return false;
@@ -47,15 +45,15 @@ public class DoctorList {
         DoctorList.add(newD);
         return true;
     }
-    public void readFromFile() {
+    public void readFromFile(String filename) {
         String currentDir = System.getProperty("user.dir");
-        Path filePath = Paths.get(currentDir, "src", "main", "resources", "inputData.txt");
+        Path filePath = Paths.get(currentDir, "src", "main", "resources", filename);
 
         try (BufferedReader file = new BufferedReader(new FileReader(filePath.toFile()))) {
             String line = "";
             while ((line = file.readLine()) != null) {
                 String[] parts = line.split(",");
-                addNew(new Doctor(parts[0], parts[1], parts[2], Integer.parseInt(parts[3]), parts[4]));
+                addNew(new Doctor(parts[0], parts[1], parts[2], parts[3], parts[4]));
             }
         } catch (Exception e) {
             System.out.println("Error to read file\n" + e.getMessage());
@@ -110,10 +108,13 @@ public class DoctorList {
 
             int code = conn.getResponseCode();
             System.out.println("Response Code : " + code);
-            if (code == HttpURLConnection.HTTP_OK)  System.out.println("Message sent successfully.");
+            if (code == HttpURLConnection.HTTP_OK)  {
+                System.out.println("Message sent successfully.");
+                return true;
+            }
             else   System.out.println("Failed to send message.");
             
-            return true;
+            
 
         } catch (Exception e) {
             e.printStackTrace();

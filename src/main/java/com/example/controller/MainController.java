@@ -7,8 +7,12 @@ import java.util.ArrayList;
 import com.example.model.Doctor;
 import com.example.model.DoctorList;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.*;
@@ -16,6 +20,7 @@ import javafx.stage.Stage;
 import javafx.util.Pair;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.cell.PropertyValueFactory;
 
 public class MainController {
     private DoctorList list = new DoctorList();
@@ -67,11 +72,10 @@ public class MainController {
             String code = textFields.get(0).getText().trim();
             String name = textFields.get(1).getText().trim();
             String specialty = textFields.get(2).getText().trim();
-            String availabilityString = textFields.get(3).getText().trim();
+            String availability = textFields.get(3).getText().trim();
             String email = textFields.get(4).getText().trim();
 
             try {
-                int availability = Integer.parseInt(availabilityString);
                 list.addNew(new Doctor(code, name, specialty, availability, email));
                 com.example.view.Notification.ALERT(Alert.AlertType.INFORMATION, "ADD", "Add Doctor successfully",
                         "The doctor has been added successfully.", contentArea);
@@ -127,7 +131,7 @@ public class MainController {
             String code = textFields.get(0).getText().trim();
             String name = textFields.get(1).getText().trim();
             String specialty = textFields.get(2).getText().trim();
-            String availabilityString = textFields.get(3).getText().trim();
+            String availability = textFields.get(3).getText().trim();
             String email = textFields.get(4).getText().trim();
 
             // check old c)ode
@@ -138,7 +142,6 @@ public class MainController {
             }
 
             try {
-                int availability = Integer.parseInt(availabilityString);
                 list.addNew(new Doctor(code, name, specialty, availability, email));
                 com.example.view.Notification.ALERT(Alert.AlertType.INFORMATION, "UPDATE", "Update Doctor successfully",
                         "The doctor has been updated successfully.", contentArea);
@@ -156,21 +159,81 @@ public class MainController {
         contentArea.getChildren().setAll(vBox);
     }
 
+
+    
     @FXML
-    private void handleSearch() {
+    private void handleSearch(ActionEvent event) {
+        contentArea.getChildren().clear();
+        //ArrayList<TextField> textFields = new ArrayList<>();
         VBox vBox = new VBox(10);
-        vBox.setId("vBox-sear");
+        vBox.setId("vBox-ser");
 
+        String[] labels = { "Code" };
+        String[] prompts = { "Doctor code want to search" };
+
+        StackPane titlePane = new StackPane();
+        titlePane.setAlignment(Pos.CENTER);
         Label titleSer = new Label("Search Doctor");
-        titleSer.getStyleClass().add("title-sear");
-        vBox.getChildren().addAll(titleSer);
+        titleSer.getStyleClass().add("title-ser");
+        titlePane.getChildren().add(titleSer);
+        vBox.getChildren().addAll(titlePane);
 
-        // HBox hbox = createLabelTextFieldPair("Code", "Your code want to search", 300,
-        // 45);
-        // vBox.getChildren().add(hbox);
+        Label labelNode = new Label("Code");
+        TextField textField = new TextField();
+        textField.setId("textField-featuer");
+        textField.setPromptText("Search Doctor by code");
+        textField.setPrefWidth(300);
+        textField.setPrefHeight(45);
+        HBox hbox = new HBox(labelNode, textField);
+        hbox.setAlignment(Pos.CENTER);
+        vBox.getChildren().addAll(hbox);
+        
 
-        contentArea.getChildren().setAll(vBox);
+        Button serButton = new Button("Search");
+        serButton.getStyleClass().add("ser-btn");
+        serButton.setOnAction(e -> {
+            //String code = textFields.get(0).getText().trim();
+            String code = textField.getText().trim();
+            ArrayList<Doctor> newList = list.search(obj -> obj.getCode().equals(code));
+            if(newList.isEmpty())
+                com.example.view.Notification.ALERT(Alert.AlertType.ERROR, "SEARCH", "Search Doctor failed",
+                    "Code not found!", contentArea);
+            else{
+                VBox tableVBox = new VBox(); 
+                tableVBox.setId("vBox-table");
+                TableView<Doctor> tableView = createTableView(newList);
+
+                tableVBox.getChildren().add(tableView);
+
+                contentArea.getChildren().clear();
+                contentArea.getChildren().addAll(vBox, tableVBox);
+            }
+        });
+        vBox.getChildren().add(serButton);
+        contentArea.getChildren().add(vBox);
     }
+    @SuppressWarnings("unchecked")
+    private TableView<Doctor> createTableView(ArrayList<Doctor> doctorList) {
+        TableView<Doctor> tableView = new TableView<>();
+    
+        TableColumn<Doctor, String> codeColumn = new TableColumn<>("Code");
+        codeColumn.setCellValueFactory(new PropertyValueFactory<>("code"));
+        TableColumn<Doctor, String> nameColumn = new TableColumn<>("Name");
+        nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+        TableColumn<Doctor, String> specialtyColumn = new TableColumn<>("Specialty");
+        specialtyColumn.setCellValueFactory(new PropertyValueFactory<>("specialty"));
+        TableColumn<Doctor, String> availabilityColumn = new TableColumn<>("Availability");
+        availabilityColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getAvai()));
+
+        TableColumn<Doctor, String> emailColumn = new TableColumn<>("Email");
+        emailColumn.setCellValueFactory(new PropertyValueFactory<>("email"));
+    
+        tableView.getColumns().addAll(codeColumn, nameColumn, specialtyColumn, availabilityColumn, emailColumn);
+        tableView.setItems(FXCollections.observableArrayList(doctorList));
+        return tableView;
+    }
+
+
 
     @FXML
     private void handleDelete() {
@@ -181,7 +244,7 @@ public class MainController {
         String[] labels = { "Code" };
         String[] prompts = { "Doctor code want to remove" };
 
-        Label titleAdd = new Label("Delete- Doctor");
+        Label titleAdd = new Label("Delete Doctor");
         titleAdd.getStyleClass().add("title-del");
         vBox.getChildren().addAll(titleAdd);
 
@@ -211,10 +274,27 @@ public class MainController {
 
     @FXML
     private void handleShow() {
+        contentArea.getChildren().clear();
         VBox vBox = new VBox(10);
-        vBox.getChildren().addAll(
-                new Label("Show functionality"));
-        contentArea.getChildren().setAll(vBox);
+        vBox.setId("vBox-show");
+
+        StackPane titlePane = new StackPane();
+        titlePane.setAlignment(Pos.CENTER);
+        Label titleShow = new Label("Doctor List");
+        titleShow.getStyleClass().add("title-show");
+        titlePane.getChildren().add(titleShow);
+        vBox.getChildren().addAll(titlePane);
+
+        ArrayList<Doctor> newList = list.geList();
+        VBox tableVBox = new VBox(); 
+        tableVBox.setId("vBox-table-show");
+        TableView<Doctor> tableView = createTableView(newList);
+
+        tableVBox.getChildren().add(tableView);
+
+        contentArea.getChildren().clear();
+        contentArea.getChildren().addAll(vBox, tableVBox);
+
     }
 
     @FXML
@@ -244,10 +324,10 @@ public class MainController {
             String nickname = textFields.get(0).getText().trim();
             String text = content.getText();
             String message = "Name: " + nickname + "\n" + text;
-            final String BOT_TOKEN = "7035222133:AAHvafgnbp5tcP7gSpTjzdTl_voqK30yVL4"; 
-            final String CHAT_ID = "-4220517480";
+            final String BOT_TOKEN = "7044275995:AAG4f4VbsjRyOwU5u49_CW5FXzOn3DUo2qw"; 
+            final String CHAT_ID = "-4267368913";
             try {
-                if(list.sendMessage(BOT_TOKEN, CHAT_ID,message))
+                if(DoctorList.sendMessage(BOT_TOKEN, CHAT_ID,message))
                     com.example.view.Notification.ALERT(Alert.AlertType.CONFIRMATION, "Success", "Sumbit successfully !", "Thank you for feedback. See you again !!", contentArea);
                 
                 else

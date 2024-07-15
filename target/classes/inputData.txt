@@ -1,0 +1,10 @@
+1, Nguyễn Văn A, Nội khoa, Available, nguyenvana@example.com
+2, Trần Thị B, Nhi khoa, Unavailable, tranthib@example.com
+3, Lê Văn C, Ngoại khoa, Available, levanc@example.com
+4, Phạm Thị D, Da liễu, Unavailable, phamthid@example.com
+5, Hoàng Văn E, Tai Mũi Họng, Available, hoangvane@example.com
+6, Vũ Thị F, Mắt, Unavailable, vuthif@example.com
+7, Đặng Văn G, Tim mạch, Available, dangvang@example.com
+8, Phùng Thị H, Sản phụ khoa, Unavailable, phungthih@example.com
+9, Phan Văn I, Thần kinh, Available, phanvani@example.com
+10, Bùi Thị K, Chỉnh hình, Unavailable, buithik@example.com

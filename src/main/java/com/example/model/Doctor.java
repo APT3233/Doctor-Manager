@@ -3,14 +3,13 @@ package com.example.model;
 
 public class Doctor {
     private String code, name, specialty, email;
-    private int Availability;
+    private String availability;
 
-
-    public Doctor(String code, String name, String specialty, int ava, String email) {
+    public Doctor(String code, String name, String specialty, String ava, String email) {
         this.code = code;
         this.name = name;
         this.specialty = specialty;
-        this.Availability = ava;
+        this.availability = ava;
         this.email = email;
     }
 
@@ -32,11 +31,11 @@ public class Doctor {
     public String getCode(){
         return code;
     }
-    public void setAvai(int ava){
-        this.Availability = ava;
+    public void setAvai(String ava){
+        this.availability = ava;
     }
-    public int getAvai(){
-        return Availability;
+    public String getAvai(){
+        return availability;
     }
     public void setEmail(String email){
         this.email = email;
