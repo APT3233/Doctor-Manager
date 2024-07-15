@@ -46,7 +46,7 @@ public class LoginController {
             //  System.out.println("Invalid login!");
             
         } catch (Exception e) {
-            System.out.println("Error read date");
+            e.printStackTrace();
         }
         
     }

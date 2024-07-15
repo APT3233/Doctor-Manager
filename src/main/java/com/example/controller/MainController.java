@@ -19,7 +19,6 @@ import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 import javafx.scene.control.*;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 public class MainController {
@@ -164,12 +163,8 @@ public class MainController {
     @FXML
     private void handleSearch(ActionEvent event) {
         contentArea.getChildren().clear();
-        //ArrayList<TextField> textFields = new ArrayList<>();
         VBox vBox = new VBox(10);
         vBox.setId("vBox-ser");
-
-        String[] labels = { "Code" };
-        String[] prompts = { "Doctor code want to search" };
 
         StackPane titlePane = new StackPane();
         titlePane.setAlignment(Pos.CENTER);
@@ -179,6 +174,7 @@ public class MainController {
         vBox.getChildren().addAll(titlePane);
 
         Label labelNode = new Label("Code");
+        labelNode.setId("label-ser");
         TextField textField = new TextField();
         textField.setId("textField-featuer");
         textField.setPromptText("Search Doctor by code");
