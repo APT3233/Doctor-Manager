@@ -1,6 +1,15 @@
 # Doctor Managerment
 This project is a small part extracted from PRO192 at the university, using JavaFX.
 
+## Default account
+* Username: admin
+* Password: DE180030
+
+(*) You can run file genKey.py to protect account
+```sh
+python3 genKey.py
+```
+
 ## Environement:
 - Linux | Tested | Compiled
 - Windows 11 Updating  

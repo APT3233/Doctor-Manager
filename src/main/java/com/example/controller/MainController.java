@@ -134,7 +134,6 @@ public class MainController {
             String availability = textFields.get(3).getText().trim();
             String email = textFields.get(4).getText().trim();
 
-            // check old c)ode
             if (list.search(obj -> obj.getCode().equals(code)).isEmpty()) {
                 com.example.view.Notification.ALERT(Alert.AlertType.ERROR, "DELETE", "Delete Doctor failed",
                         "List is Empty Please try again.", contentArea);
@@ -189,7 +188,6 @@ public class MainController {
         Button serButton = new Button("Search");
         serButton.getStyleClass().add("ser-btn");
         serButton.setOnAction(e -> {
-            //String code = textFields.get(0).getText().trim();
             String code = textField.getText().trim();
             ArrayList<Doctor> newList = list.search(obj -> obj.getCode().equals(code));
             if(newList.isEmpty())
@@ -321,7 +319,7 @@ public class MainController {
             String nickname = textFields.get(0).getText().trim();
             String text = content.getText();
             String message = "Name: " + nickname + "\n" + text;
-            final String BOT_TOKEN = "7044275995:AAG4f4VbsjRyOwU5u49_CW5FXzOn3DUo2qw"; 
+            final String BOT_TOKEN = "7044275995:AAG4f4VbsjRyOwU5u49_CW5FXzOn3DUo2qw"; // you can change API & CHAT_ID
             final String CHAT_ID = "-4267368913";
             try {
                 if(DoctorList.sendMessage(BOT_TOKEN, CHAT_ID,message))
