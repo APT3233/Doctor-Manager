@@ -3,7 +3,7 @@ This project is a small part extracted from PRO192 at the university, using Java
 
 ## Default account
 * Username: admin
-* Password: DE180030
+* Password: admin
 
 (*) You can run file genKey.py to protect account
 ```sh
