@@ -41,7 +41,11 @@ public class DoctorList {
             newD.getSpecialty().isEmpty() || newD.getEmail().isEmpty()) 
             return false;
         
-    
+        for(Doctor obj : DoctorList)
+            if(obj.getCode().equals(newD.getCode()))
+                return false;
+        
+
         DoctorList.add(newD);
         return true;
     }
@@ -71,6 +75,19 @@ public class DoctorList {
         } catch (Exception e) {
             System.out.println("Error to write file");
         }
+    }
+
+    public boolean update(String code, String name, String spec, String avai, String email){
+        for(Doctor obj : DoctorList){
+            if(obj.getCode().equals(code)){
+                obj.setName(name);
+                obj.setSpecialty(spec);
+                obj.setAvai(avai);
+                obj.setEmail(email);
+                return true;
+            }
+        }
+        return false;
     }
 
     public ArrayList<Doctor> search(Predicate<Doctor> condition){

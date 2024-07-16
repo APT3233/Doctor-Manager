@@ -75,14 +75,15 @@ public class MainController {
             String email = textFields.get(4).getText().trim();
 
             try {
-                list.addNew(new Doctor(code, name, specialty, availability, email));
-                com.example.view.Notification.ALERT(Alert.AlertType.INFORMATION, "ADD", "Add Doctor successfully",
-                        "The doctor has been added successfully.", contentArea);
-            } catch (NumberFormatException a) {
-                com.example.view.Notification.ALERT(Alert.AlertType.ERROR, "ADD", "Add Doctor failed",
-                        "The doctor has been failed successfully.", contentArea);
-
-            } catch (Exception a) {
+                
+                if(list.addNew(new Doctor(code, name, specialty, availability, email)))
+                    com.example.view.Notification.ALERT(Alert.AlertType.INFORMATION, "ADD", "Add Doctor successfully",
+                            "The doctor has been added successfully.", contentArea);
+                else
+                    com.example.view.Notification.ALERT(Alert.AlertType.ERROR, "ADD", "Add Doctor failed",
+                    "Doctors already exist", contentArea);
+            }
+            catch (Exception a) {
                 com.example.view.Notification.ALERT(Alert.AlertType.ERROR, "ADD", "Add Doctor failed",
                         "Failed to add the doctor. Please try again.", contentArea);
             }
@@ -141,7 +142,7 @@ public class MainController {
             }
 
             try {
-                list.addNew(new Doctor(code, name, specialty, availability, email));
+                list.update(code, name, specialty, availability, email);
                 com.example.view.Notification.ALERT(Alert.AlertType.INFORMATION, "UPDATE", "Update Doctor successfully",
                         "The doctor has been updated successfully.", contentArea);
             } catch (NumberFormatException a) {
