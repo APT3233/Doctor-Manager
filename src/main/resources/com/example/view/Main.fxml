@@ -28,8 +28,8 @@
 
     <bottom>
         <HBox spacing="10" alignment="CENTER">
-            <Text text="Author: Nguyễn Khắc Anh"/>
-            <Text text="ID: DE180030"/>
+            <Text text="Author: Anh Nguyen"/>
+            <Text text="ID: APT3233"/>
         </HBox>
     </bottom>
 </BorderPane>
