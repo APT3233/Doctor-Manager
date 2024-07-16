@@ -31,7 +31,7 @@ public class LoginController {
             String password = hashString(passwordField.getText());
 
 
-            ///if (username.equals("8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918") && password.equals("03c23bb0e235ce37ddfbb44823522a73fbc6716c05eaa9e42011f96ebee4ffc1")) {
+            if (username.equals("8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918") && password.equals("03c23bb0e235ce37ddfbb44823522a73fbc6716c05eaa9e42011f96ebee4ffc1")) {
                 try {
                     FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/view/Main.fxml"));
                     Parent root = fxmlLoader.load();
@@ -42,8 +42,8 @@ public class LoginController {
                     System.out.println("error to read Main file" +e.getMessage());
                     e.printStackTrace();
                 }
-            //} else 
-            //  System.out.println("Invalid login!");
+            } else 
+             System.out.println("Invalid login!");
             
         } catch (Exception e) {
             e.printStackTrace();
