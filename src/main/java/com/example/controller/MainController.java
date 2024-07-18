@@ -2,7 +2,9 @@ package com.example.controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
-
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import com.example.model.Doctor;
 import com.example.model.DoctorList;
@@ -33,6 +35,27 @@ public class MainController {
 
     @FXML
     private Button addButton;
+
+    @SuppressWarnings("unchecked")
+    private TableView<Doctor> createTableView(ArrayList<Doctor> doctorList) {
+        TableView<Doctor> tableView = new TableView<>();
+    
+        TableColumn<Doctor, String> codeColumn = new TableColumn<>("Code");
+        codeColumn.setCellValueFactory(new PropertyValueFactory<>("code"));
+        TableColumn<Doctor, String> nameColumn = new TableColumn<>("Name");
+        nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+        TableColumn<Doctor, String> specialtyColumn = new TableColumn<>("Specialty");
+        specialtyColumn.setCellValueFactory(new PropertyValueFactory<>("specialty"));
+        TableColumn<Doctor, String> availabilityColumn = new TableColumn<>("Availability");
+        availabilityColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getAvai()));
+
+        TableColumn<Doctor, String> emailColumn = new TableColumn<>("Email");
+        emailColumn.setCellValueFactory(new PropertyValueFactory<>("email"));
+    
+        tableView.getColumns().addAll(codeColumn, nameColumn, specialtyColumn, availabilityColumn, emailColumn);
+        tableView.setItems(FXCollections.observableArrayList(doctorList));
+        return tableView;
+    }
 
     public static void showMainWindow() {
         try {
@@ -76,7 +99,7 @@ public class MainController {
 
             try {
                 
-                if(list.addNew(new Doctor(code, name, specialty, availability, email)))
+                if(list.addDoctor(code, name, specialty, availability, email))
                     com.example.view.Notification.ALERT(Alert.AlertType.INFORMATION, "ADD", "Add Doctor successfully",
                             "The doctor has been added successfully.", contentArea);
                 else
@@ -87,6 +110,7 @@ public class MainController {
                 com.example.view.Notification.ALERT(Alert.AlertType.ERROR, "ADD", "Add Doctor failed",
                         "Failed to add the doctor. Please try again.", contentArea);
             }
+
         });
 
         vBox.getChildren().add(addButton);
@@ -113,7 +137,7 @@ public class MainController {
         vBox.setId("vBox-add");
 
         String[] labels = { "Old Code", "New Name", "New Specialty", "New Availability", "New Email" };
-        String[] prompts = { "Old code to check", "abc", "Specialist Level 1", "1-10", "fun@hi.com" };
+        String[] prompts = { "Old code to check", "abc", "Specialty", "avai/unavai", "thank@you.com" };
 
         Label titleAdd = new Label("Update Doctor");
         titleAdd.getStyleClass().add("title-upd");
@@ -134,22 +158,17 @@ public class MainController {
             String availability = textFields.get(3).getText().trim();
             String email = textFields.get(4).getText().trim();
 
-            if (list.search(obj -> obj.getCode().equals(code)).isEmpty()) {
-                com.example.view.Notification.ALERT(Alert.AlertType.ERROR, "DELETE", "Delete Doctor failed",
-                        "List is Empty Please try again.", contentArea);
-                return;
-            }
-
             try {
-                list.update(code, name, specialty, availability, email);
-                com.example.view.Notification.ALERT(Alert.AlertType.INFORMATION, "UPDATE", "Update Doctor successfully",
-                        "The doctor has been updated successfully.", contentArea);
-            } catch (NumberFormatException a) {
-                com.example.view.Notification.ALERT(Alert.AlertType.ERROR, "ADD", "Add Doctor failed",
-                        "The doctor has been failed successfully.", contentArea);
-            } catch (Exception a) {
-                com.example.view.Notification.ALERT(Alert.AlertType.ERROR, "ADD", "Add Doctor failed",
-                        "Failed to add the doctor. Please try again.", contentArea);
+                if(list.updateDoctor(code, name, specialty, availability, email))
+                    com.example.view.Notification.ALERT(Alert.AlertType.INFORMATION, "UPDATE", "Update Doctor successfully",
+                            "The doctor has been updated successfully.", contentArea);
+                else
+                    com.example.view.Notification.ALERT(Alert.AlertType.ERROR, "UPDATE", "Update Doctor failed",
+                            "Failed to update the doctor. Please try again.", contentArea);
+            }catch (Exception a) {
+                System.out.print(a.getMessage());
+                com.example.view.Notification.ALERT(Alert.AlertType.ERROR, "UPDATE", "Update Doctor failed",
+                        "Failed to update the doctor. Please try again.", contentArea);
             }
 
         });
@@ -161,7 +180,7 @@ public class MainController {
 
     
     @FXML
-    private void handleSearch(ActionEvent event) {
+    private void handleSearch(ActionEvent event) {  
         contentArea.getChildren().clear();
         VBox vBox = new VBox(10);
         vBox.setId("vBox-ser");
@@ -189,49 +208,34 @@ public class MainController {
         serButton.getStyleClass().add("ser-btn");
         serButton.setOnAction(e -> {
             String code = textField.getText().trim();
-            ArrayList<Doctor> newList = list.search(obj -> obj.getCode().equals(code));
-            if(newList.isEmpty())
+            try{
+                ArrayList<Doctor> newList = list.searchDoctorByCode(code);
+                if(newList.isEmpty())
+                    com.example.view.Notification.ALERT(Alert.AlertType.ERROR, "SEARCH", "Search Doctor failed",
+                        "Code not found!", contentArea);
+                else{
+                    VBox tableVBox = new VBox(); 
+                    tableVBox.setId("vBox-table");
+                    TableView<Doctor> tableView = createTableView(newList);
+    
+                    tableVBox.getChildren().add(tableView);
+    
+                    contentArea.getChildren().clear();
+                    contentArea.getChildren().addAll(vBox, tableVBox);
+                }
+            }catch(Exception a){
                 com.example.view.Notification.ALERT(Alert.AlertType.ERROR, "SEARCH", "Search Doctor failed",
-                    "Code not found!", contentArea);
-            else{
-                VBox tableVBox = new VBox(); 
-                tableVBox.setId("vBox-table");
-                TableView<Doctor> tableView = createTableView(newList);
-
-                tableVBox.getChildren().add(tableView);
-
-                contentArea.getChildren().clear();
-                contentArea.getChildren().addAll(vBox, tableVBox);
+                        "Code not found!", contentArea);
             }
+            
         });
         vBox.getChildren().add(serButton);
         contentArea.getChildren().add(vBox);
     }
-    @SuppressWarnings("unchecked")
-    private TableView<Doctor> createTableView(ArrayList<Doctor> doctorList) {
-        TableView<Doctor> tableView = new TableView<>();
     
-        TableColumn<Doctor, String> codeColumn = new TableColumn<>("Code");
-        codeColumn.setCellValueFactory(new PropertyValueFactory<>("code"));
-        TableColumn<Doctor, String> nameColumn = new TableColumn<>("Name");
-        nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-        TableColumn<Doctor, String> specialtyColumn = new TableColumn<>("Specialty");
-        specialtyColumn.setCellValueFactory(new PropertyValueFactory<>("specialty"));
-        TableColumn<Doctor, String> availabilityColumn = new TableColumn<>("Availability");
-        availabilityColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getAvai()));
-
-        TableColumn<Doctor, String> emailColumn = new TableColumn<>("Email");
-        emailColumn.setCellValueFactory(new PropertyValueFactory<>("email"));
-    
-        tableView.getColumns().addAll(codeColumn, nameColumn, specialtyColumn, availabilityColumn, emailColumn);
-        tableView.setItems(FXCollections.observableArrayList(doctorList));
-        return tableView;
-    }
-
-
 
     @FXML
-    private void handleDelete() {
+    private void handleDelete() {   
         ArrayList<TextField> textFields = new ArrayList<>();
         VBox vBox = new VBox(10);
         vBox.setId("vBox-del");
@@ -253,7 +257,9 @@ public class MainController {
         delButton.getStyleClass().add("del-btn");
         delButton.setOnAction(e -> {
             String code = textFields.get(0).getText().trim();
-            if (list.remove(obj -> obj.getCode().equals(code))) {
+            List<String> codes = Arrays.asList(code.split(","));
+            codes = codes.stream().map(String::trim).collect(Collectors.toList());
+            if (list.deleteDoctorsByCodes(codes)) {
                 com.example.view.Notification.ALERT(Alert.AlertType.INFORMATION, "DELETE", "Deleted Doctor successfully",
                         "The doctor has been deleted successfully.", contentArea);
   
@@ -280,7 +286,7 @@ public class MainController {
         titlePane.getChildren().add(titleShow);
         vBox.getChildren().addAll(titlePane);
 
-        ArrayList<Doctor> newList = list.geList();
+        ArrayList<Doctor> newList = list.readDoctor();
         VBox tableVBox = new VBox(); 
         tableVBox.setId("vBox-table-show");
         TableView<Doctor> tableView = createTableView(newList);
@@ -289,7 +295,7 @@ public class MainController {
 
         contentArea.getChildren().clear();
         contentArea.getChildren().addAll(vBox, tableVBox);
-
+        
     }
 
     @FXML
@@ -319,8 +325,8 @@ public class MainController {
             String nickname = textFields.get(0).getText().trim();
             String text = content.getText();
             String message = "Name: " + nickname + "\n" + text;
-            final String BOT_TOKEN = "7044275995:AAG4f4VbsjRyOwU5u49_CW5FXzOn3DUo2qw"; // you can change API & CHAT_ID
-            final String CHAT_ID = "-4267368913";
+            final String BOT_TOKEN = ""; // you can change API & CHAT_ID
+            final String CHAT_ID = "";
             try {
                 if(DoctorList.sendMessage(BOT_TOKEN, CHAT_ID,message))
                     com.example.view.Notification.ALERT(Alert.AlertType.CONFIRMATION, "Success", "Sumbit successfully !", "Thank you for feedback. See you again !!", contentArea);
