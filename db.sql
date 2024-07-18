@@ -1,5 +1,5 @@
 
--- Example database use lab PRO192
+-- Example database
 
 CREATE DATABASE IF NOT EXISTS user_db;
 
