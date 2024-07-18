@@ -14,6 +14,7 @@ python3 genKey.py
 - Linux | Tested | Compiled
 - Windows 11 Updating  
 - Java 17.0 above
+- mysql 8.0.37
 
 ## Usage
 1. Install maven
